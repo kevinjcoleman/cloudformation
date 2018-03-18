@@ -1,0 +1,30 @@
+Description: "Create an EC2 instance running the Amazon Linux 32 bit AMI."
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters: 
+  KeyPair: 
+    Description: "The EC2 Key Pair to allow SSH access to the instance"
+    Type: "String"
+  
+Resources:
+  Ec2Instance: 
+    Type: AWS::EC2::Instance
+    Properties: 
+      KeyName: 
+        Ref: KeyPair
+      ImageId: "ami-0c0e7c6c" # Just use default amazon AMI here.
+      InstanceType: t2.nano # smallest type, see types here: https://aws.amazon.com/ec2/instance-types/
+      Tags:
+        -
+          Key: environment-type
+          Value: test
+          
+  InstanceSecurityGroup: 
+    Type: "AWS::EC2::SecurityGroup" # SecurityGroup rules https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group-rule.html#cfn-ec2-security-group-rule-cidrip.
+    Properties:
+      GroupName: String 
+      GroupDescription: "Enable HTTP access on the configured port"
+Outputs:
+  InstanceId:
+    Description: "The InstanceId of the newly created EC2 instance"
+    Value:
+      Ref: Ec2Instance
