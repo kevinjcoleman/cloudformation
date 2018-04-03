@@ -41,7 +41,6 @@ Resources:
       - Namespace: aws:autoscaling:launchconfiguration
         OptionName: InstanceType
         Value: t2.micro
-        Description: 'Try t2 micro next time to see if that solves memory issues.'
       SolutionStackName: 64bit Amazon Linux 2017.09 v2.8.4 running Docker 17.09.1-ce
   sampleEnvironment:
     Type: AWS::ElasticBeanstalk::Environment

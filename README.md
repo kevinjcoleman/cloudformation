@@ -18,3 +18,21 @@
 
 ## Delete a stack 
 `aws cloudformation delete-stack --stack-name myteststack`
+
+
+# Helpful commands 
+
+### SSH into es instance.
+`ssh -i ~/.ssh/new-ec2-keys.pem ec2-user@#{url}.us-west-1.compute.amazonaws.com`
+
+### Connect to docker on instance 
+`sudo docker COMMAND`
+
+### Check unexpected quit logs 
+`cd /var/log/eb-docker/containers/eb-current-app/`
+`sudo gzip -d unexpected-quit.log1521345661.gz`
+`cat unexpected-quit.log1521345661`
+
+### Check free mem
+`free -m`
+`grep MemTotal /proc/meminfo`
