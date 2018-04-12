@@ -1,30 +1,26 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Parameters: 
-  TestApplicationName: 
-    Description: "TestApplicationName for the ElasticBeanstalk instance."
-    Type: "String"
     
 Resources:
-  sampleApplication:
+  elasticSearchApplication:
     Type: AWS::ElasticBeanstalk::Application #https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-beanstalk.html
     Properties:
-      ApplicationName: !Ref TestApplicationName
-      Description: AWS Elastic Beanstalk Sample Application
-  sampleApplicationVersion:
+      ApplicationName: ElasticSearchCluster
+      Description: EB ElasticSearchCluster
+  elasticSearchApplicationVersion:
     Type: AWS::ElasticBeanstalk::ApplicationVersion
     Properties:
       ApplicationName:
-        Ref: sampleApplication
-      Description: AWS ElasticBeanstalk Sample Application Version
+        Ref: elasticSearchApplication
+      Description: elasticSearchApplication Version
       SourceBundle:
         S3Bucket: mys3bucketforeb
         S3Key: deploy.zip
-  sampleConfigurationTemplate:
+  elasticSearchConfigurationTemplate:
     Type: AWS::ElasticBeanstalk::ConfigurationTemplate
     Properties:
       ApplicationName:
-        Ref: sampleApplication
-      Description: AWS ElasticBeanstalk Sample Configuration Template
+        Ref: elasticSearchApplication
+      Description: elasticSearchApplication Configuration Template
       OptionSettings: # Options located here: https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html#command-options-general-ec2vpc
       - Namespace: aws:autoscaling:asg
         OptionName: MinSize
@@ -38,17 +34,29 @@ Resources:
       - Namespace: aws:autoscaling:launchconfiguration
         OptionName: EC2KeyName
         Value: new-ec2-keys
+      - Namespace: aws:elb:loadbalancer # Limit ingress https://stackoverflow.com/questions/41453302/is-it-possible-to-limit-inbound-ingress-access-to-a-load-balancer-to-a-source-se
+        OptionName: SecurityGroups
+        Value: !ImportValue 'LoadBalancerSecurityGroupId'
+      - Namespace: aws:elb:loadbalancer
+        OptionName: ManagedSecurityGroup
+        Value: !ImportValue 'LoadBalancerSecurityGroupId'
+      - Namespace: aws:autoscaling:updatepolicy:rollingupdate
+        OptionName: RollingUpdateEnabled
+        Value: true
+      - Namespace: aws:elasticbeanstalk:command
+        OptionName: DeploymentPolicy
+        Value: Rolling
       - Namespace: aws:autoscaling:launchconfiguration
         OptionName: InstanceType
         Value: t2.micro
       SolutionStackName: 64bit Amazon Linux 2017.09 v2.8.4 running Docker 17.09.1-ce
-  sampleEnvironment:
+  elasticSearchEnvironment:
     Type: AWS::ElasticBeanstalk::Environment
     Properties:
       ApplicationName:
-        Ref: sampleApplication
-      Description: AWS ElasticBeanstalk Sample Environment
+        Ref: elasticSearchApplication
+      Description: elasticSearchApplication Environment
       TemplateName:
-        Ref: sampleConfigurationTemplate
+        Ref: elasticSearchConfigurationTemplate
       VersionLabel:
-        Ref: sampleApplicationVersion
+        Ref: elasticSearchApplicationVersion

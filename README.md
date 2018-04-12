@@ -14,7 +14,7 @@
 `aws cloudformation describe-stack-events myteststack`
 
 ## Update Stack 
-`aws cloudformation update-stack --stack-name myteststack --template-body file://$(pwd)/basic-ec2.yml`
+`aws cloudformation update-stack --stack-name eb-teststack-8 --template-body file://$(pwd)/basic-eb.yml`
 
 ## Delete a stack 
 `aws cloudformation delete-stack --stack-name myteststack`
@@ -33,6 +33,17 @@
 `sudo gzip -d unexpected-quit.log1521345661.gz`
 `cat unexpected-quit.log1521345661`
 
+
 ### Check free mem
 `free -m`
 `grep MemTotal /proc/meminfo`
+
+### Check eb logs 
+`cat /var/log/eb-activity.log`
+
+
+
+# Notes 
+
+- Need to add custom tcp rule to security group so that port :9200 is open to public, this will need to be closed for actual dev instances in the future though.
+- Figure out why access denied is happening for volume mounts.

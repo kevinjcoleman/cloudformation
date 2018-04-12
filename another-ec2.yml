@@ -22,9 +22,9 @@ Resources:
       GroupDescription: "Enable ssh"
       SecurityGroupIngress:
         - IpProtocol: tcp
-          CidrIp: 0.0.0.0/0
-          FromPort: '22'
-          ToPort: '22'
+          SourceSecurityGroupId: !ImportValue 'EC2SecurityGroup'
+          FromPort: '80'
+          ToPort: '80'
 
 Outputs:
   InstanceId:

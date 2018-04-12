@@ -1,0 +1,30 @@
+Description: "Create a SecurityGroups for elasticbeanstalk."
+AWSTemplateFormatVersion: "2010-09-09"
+  
+Resources:          
+  LoadBalancerSecurityGroup:
+    Type: "AWS::EC2::SecurityGroup" # SecurityGroup rules https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group-rule.html#cfn-ec2-security-group-rule-cidrip.
+    Properties:
+      GroupName: "LoadBalancerSecurityGroup" 
+      GroupDescription: "Enable Ingress only from ec2 group."
+      SecurityGroupIngress: # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group-ingress.html
+      - IpProtocol: tcp
+        FromPort: '80'
+        ToPort: '80'
+        SourceSecurityGroupId: !ImportValue 'EC2SecurityGroup'
+
+Outputs:
+  LoadBalancerSecurityGroup:
+    Description: "The LoadBalancerSecurityGroup."
+    Export:
+      Name: LoadBalancerSecurityGroup
+    Value: LoadBalancerSecurityGroup
+    
+  LoadBalancerSecurityGroupId:
+    Description: "The LoadBalancerSecurityGroup."
+    Export:
+      Name: LoadBalancerSecurityGroupId
+    Value: 
+      Fn::GetAtt:
+      - LoadBalancerSecurityGroup
+      - GroupId
